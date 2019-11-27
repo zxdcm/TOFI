@@ -144,7 +144,7 @@ namespace Deposit_2.UserService
 
             var user = GetUser(u => u.UserId == payload.UserId);
 
-            if (DateTime.UtcNow.AddMinutes(10) < payload.CreatedOn && user.Email == payload.Email)
+            if (DateTime.UtcNow.AddMinutes(10) < payload.CreatedOn && user.Email != payload.Email)
             {
                 user.Email = payload.Email;
 
