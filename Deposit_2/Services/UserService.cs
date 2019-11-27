@@ -1,21 +1,34 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Newtonsoft.Json;
 using Deposit_2.Context;
 using Deposit_2.Models;
 using Deposit_2.Resources;
 using Deposit_2.Utils;
 using Deposit_2.ViewModels;
-using Newtonsoft.Json;
 
-namespace Deposit_2.UserService
+namespace Deposit_2.Services
 {
     public class UserService : IUserService
     {
         private readonly UserContext _userContext;
-        public UserService(UserContext userContext)
+        private readonly SecurityService _securityService;
+        private readonly IEmailSender _emailSender;
+        private readonly ApplicationConfiguration _config;
+
+        public UserService(
+            UserContext userContext,
+            IEmailSender emailSender,
+            SecurityService securityService,
+            ApplicationConfiguration config)
         {
             _userContext = userContext ?? throw new NullReferenceException(nameof(UserContext));
+            _emailSender = emailSender;
+            _securityService = securityService;
+            _config = config;
         }
         public User GetUser(Expression<Func<User, bool>> predicate) 
             => _userContext.Users.FirstOrDefault(predicate);
@@ -36,7 +49,7 @@ namespace Deposit_2.UserService
             if (isUserNameOccupied)
                 return Result<User>.Fail(string.Format(ResultMessages.UserNameOccupied));
 
-            var securedPassword = SecurityExtensions.SecureWithMd5(signUpVm.Password, signUpVm.Email);
+            var securedPassword = _securityService.SecureWithMd5(signUpVm.Password, signUpVm.Email);
             var userEntity = new User
             {
                 Username = signUpVm.Username,
@@ -63,14 +76,14 @@ namespace Deposit_2.UserService
             Result<User> result;
 
             var isAccountBlocked = userEntity.BlockExpires > now;
-            var accountedBlockedResult = Result<User>.Fail(string.Format(ResultMessages.AccountBlocked, Configuration.BlockTimeInMinutes));
+            var accountedBlockedResult = Result<User>.Fail(string.Format(ResultMessages.AccountBlocked, _config.BlockTimeInMinutes));
 
             if (isAccountBlocked)
             {
                 return accountedBlockedResult;
             }
 
-            if (userEntity.Password == SecurityExtensions.SecureWithMd5(password, userEntity.Email))
+            if (userEntity.Password == _securityService.SecureWithMd5(password, userEntity.Email))
             {
                 userEntity.FailedAuthRetryCount = 0;
                 result = Result<User>.Ok(new User
@@ -86,9 +99,9 @@ namespace Deposit_2.UserService
             {
                 userEntity.FailedAuthRetryCount += 1;
 
-                if (userEntity.FailedAuthRetryCount == Configuration.AmountOfRetriesUntilBlock)
+                if (userEntity.FailedAuthRetryCount == _config.AmountOfRetriesUntilBlock)
                 {
-                    userEntity.BlockExpires = now.AddMinutes(Configuration.BlockTimeInMinutes);
+                    userEntity.BlockExpires = now.AddMinutes(_config.BlockTimeInMinutes);
                     userEntity.FailedAuthRetryCount = 0;
                     result = accountedBlockedResult;
                 }
@@ -112,22 +125,26 @@ namespace Deposit_2.UserService
         public Result<User> EditFiltersConfig(int userId, string filtersConfig) =>
             EditWithoutSecurityCheck(userId, filtersConfig);
 
-        public Result<User> EditEmail(int userId, string password, string email)
+        public async Task<Result<User>> EditEmail(int userId, string password, string email)
         {
             var result = GetUserWithSecurityCheck(userId, password);
             if (!result.IsSuccess)
                 return result;
 
-            return SendEmailConfirmationMessage(userId, email);
+            await SendEmailConfirmationMessage(userId, email);
+
+            return Result<User>.Ok(string.Empty);
         }
 
-        public Result<User> EditEmail(int userId, string email)
+        public async Task<Result<User>> EditEmail(int userId, string email)
         {
             var result = GetUser(userId);
             if (!result.IsSuccess)
                 return result;
 
-            return SendEmailConfirmationMessage(userId, email);
+            await SendEmailConfirmationMessage(userId, email);
+
+            return Result<User>.Ok(string.Empty);
         }
 
         public Result<bool> ConfirmEmail(string code)
@@ -135,7 +152,7 @@ namespace Deposit_2.UserService
             var payload = new { UserId = 0, Email = string.Empty, CreatedOn = DateTime.MinValue };
             try
             {
-                payload = JsonConvert.DeserializeAnonymousType(SecurityExtensions.DecryptAes(code), payload);
+                payload = JsonConvert.DeserializeAnonymousType(_securityService.DecryptAes(code), payload);
             }
             catch (Exception) // todo: replace
             {
@@ -144,7 +161,8 @@ namespace Deposit_2.UserService
 
             var user = GetUser(u => u.UserId == payload.UserId);
 
-            if (DateTime.UtcNow.AddMinutes(10) < payload.CreatedOn && user.Email != payload.Email)
+            if (DateTime.UtcNow.AddMinutes(_config.ConfirmationCodeValidTimeInMinutes) < payload.CreatedOn
+                && user.Email != payload.Email)
             {
                 user.Email = payload.Email;
 
@@ -156,13 +174,13 @@ namespace Deposit_2.UserService
             return Result<bool>.Ok(false);
         }
 
-        private Result<User> SendEmailConfirmationMessage(int userId, string email)
+        private async Task SendEmailConfirmationMessage(int userId, string email)
         {
             var confirmationCodePayload = new { UserId = userId, Email = email, CreatedOn = DateTime.UtcNow };
-            var confirmationCode = SecurityExtensions.EncryptAes(JsonConvert.SerializeObject(confirmationCodePayload));
+            var confirmationCode = _securityService.EncryptAes(JsonConvert.SerializeObject(confirmationCodePayload));
 
-            //TODO: send to email
-            throw new NotImplementedException();
+            await _emailSender.SendEmailAsync(email, EmailMessages.Subject,
+                string.Format(EmailMessages.HtmlBody, confirmationCode));
         }
 
         private Result<User> EditWithSecurityCheck(
@@ -176,7 +194,7 @@ namespace Deposit_2.UserService
             var user = userResult.Data;
 
             if (!string.IsNullOrWhiteSpace(newPassword))
-                user.Password = SecurityExtensions.SecureWithMd5(newPassword, user.Email);
+                user.Password = _securityService.SecureWithMd5(newPassword, user.Email);
 
             if (!string.IsNullOrWhiteSpace(profileConfig))
                 user.ProfileConfig = profileConfig;
@@ -220,7 +238,7 @@ namespace Deposit_2.UserService
                 return userResult;
 
             var user = userResult.Data;
-            if (user.Password != SecurityExtensions.SecureWithMd5(oldPassword, user.Email))
+            if (user.Password != _securityService.SecureWithMd5(oldPassword, user.Email))
                 return Result<User>.Ok(string.Format(ResultMessages.InvalidPassword));
 
             return Result<User>.Ok(user);

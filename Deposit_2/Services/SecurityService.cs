@@ -2,16 +2,25 @@
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using Deposit_2.Utils;
 
-namespace Deposit_2.Utils
+namespace Deposit_2.Services
 {
-    public class SecurityExtensions
+    public class SecurityService
     {
-        public static string SecureWithMd5(string message, string salt)
-            => Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(string.Join("", message, salt, Configuration.HashSalt))));
+        private readonly ApplicationConfiguration _config;
 
-        public static string EncryptAes(string clearText, string key = Configuration.EmailKey)
+        public SecurityService(ApplicationConfiguration config)
         {
+            _config = config;
+        }
+
+        public string SecureWithMd5(string message, string salt)
+            => Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(string.Join("", message, salt, _config.HashSalt))));
+
+        public string EncryptAes(string clearText, string key = null)
+        {
+            key = key ?? _config.AesKey;
             byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
             using (var encryptor = Aes.Create())
             {
@@ -30,8 +39,10 @@ namespace Deposit_2.Utils
             }
             return clearText;
         }
-        public static string DecryptAes(string cipherText, string key = Configuration.EmailKey)
+
+        public string DecryptAes(string cipherText, string key = null)
         {
+            key = key ?? _config.AesKey;
             cipherText = cipherText.Replace(" ", "+");
             byte[] cipherBytes = Convert.FromBase64String(cipherText);
             using (var encryptor = Aes.Create())

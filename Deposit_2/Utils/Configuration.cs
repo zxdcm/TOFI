@@ -1,13 +1,18 @@
 ﻿namespace Deposit_2.Utils
 {
-    public static class Configuration
+    public class ApplicationConfiguration
     {
-        public const double BlockTimeInMinutes = 15.0;
-        public const int AmountOfRetriesUntilBlock = 3;
-        
-        // TODO: Move to secrets
-        public const string HashSalt = "R^P$w}/k,;5CV>X5j#VbaS%-RgC9#NPz";
-        public const string EmailKey =
-            "R^P$w}/k,;5CV>X5j#VbaS%-RgC9#NPzR^P$w}/k,;5CV>X5j#VbaS%-RgC9#NPzR^P$w}/k,;5CV>X5j#VbaS%-RgC9#NPz"; 
+        // Move to config
+        public double BlockTimeInMinutes { get; set; }
+        public int AmountOfRetriesUntilBlock { get; set; }
+        public double ConfirmationCodeValidTimeInMinutes { get; set; }
+
+        public string StmpServer { get; set; }
+        public int PortNumber { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+
+        public string HashSalt { get; set; }
+        public string AesKey { get; set; }
     }
 }

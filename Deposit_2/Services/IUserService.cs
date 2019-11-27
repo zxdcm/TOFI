@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Deposit_2.Models;
 using Deposit_2.Utils;
 using Deposit_2.ViewModels;
 
-namespace Deposit_2.UserService
+namespace Deposit_2.Services
 {
     public interface IUserService
     {
@@ -15,8 +16,8 @@ namespace Deposit_2.UserService
         Result<User> EditPassword(int userId, string password, string newPassword);
         Result<User> EditProfileConfig(int userId, string password, string profileConfig);
         Result<User> EditFiltersConfig(int userId, string filtersConfig);
-        Result<User> EditEmail(int userId, string password, string email);
-        Result<User> EditEmail(int userId, string email);
+        Task<Result<User>> EditEmail(int userId, string password, string email);
+        Task<Result<User>> EditEmail(int userId, string email);
         Result<bool> ConfirmEmail(string confirmationCode);
     }
 }
