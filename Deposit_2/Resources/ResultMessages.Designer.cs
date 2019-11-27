@@ -70,7 +70,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An account with the email {0} already exist.
+        ///   Looks up a localized string similar to An account with the Email {0} already exist.
         /// </summary>
         public static string EmailOccupied {
             get {
@@ -88,11 +88,47 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to User with the following email {0} not found.
+        ///   Looks up a localized string similar to Your password has been changed sucessfully.
+        /// </summary>
+        public static string PasswordChanged {
+            get {
+                return ResourceManager.GetString("PasswordChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password do not match with the stored one.
+        /// </summary>
+        public static string PasswordsDoNotMatch {
+            get {
+                return ResourceManager.GetString("PasswordsDoNotMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An account with the Login {0} already exist.
+        /// </summary>
+        public static string UserNameOccupied {
+            get {
+                return ResourceManager.GetString("UserNameOccupied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User with the following {0} {1} not found.
         /// </summary>
         public static string UserNotFound {
             get {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User with the following Login {0} not found.
+        /// </summary>
+        public static string UserWithLoginNotFound {
+            get {
+                return ResourceManager.GetString("UserWithLoginNotFound", resourceCulture);
             }
         }
     }

@@ -1,42 +1,53 @@
-﻿using System.Collections.Generic;
+﻿using Deposit_2.UserService;
+using Deposit_2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deposit_2.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        public UserController()
+        private readonly IUserService _userService;
+        public UserController(IUserService userService)
         {
-            
-        }
-        // GET: api/User
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
+            _userService = userService;
         }
 
-        // GET: api/User/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        [HttpPost(Name = nameof(SignIn))]
+        public IActionResult SignIn([FromBody] UserViewModel signInVw) 
+            => Ok(_userService.SignIn(signInVw.Email, signInVw.Password));
 
-        // POST: api/User
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        [HttpPost(Name = nameof(SignUp))]
+        public IActionResult SignUp([FromBody] UserViewModel signUpVm)
+            => Ok(_userService.SignUp(signUpVm));
 
         // PUT: api/User/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        [HttpPut("{id}", Name = nameof(EditPassword))]
+        public IActionResult EditPassword(int id, [FromBody] string password, [FromBody] string newPassword)
+            => Ok(_userService.EditPassword(id, password, newPassword));
 
+        [HttpPut("{id}", Name = nameof(EditFilterConfig))]
+        public IActionResult EditFilterConfig(int id, [FromBody] string filterConfig)
+            => Ok(_userService.EditFiltersConfig(id, filterConfig));
+
+        [HttpPut("{id}", Name = nameof(EditProfileConfig))]
+        public IActionResult EditProfileConfig(int id, string password, [FromBody] string profileConfig)
+            => Ok(_userService.EditProfileConfig(id, password, profileConfig));
+
+        [HttpPut("{id}", Name = nameof(EditEmail))]
+        public IActionResult EditEmail(int id, string password, [FromBody] string email)
+            => Ok(_userService.EditEmail(id, password, email));
+
+        public IActionResult ConfirmEmail([FromQuery] string confirmationCode)
+        {
+            var result = _userService.ConfirmEmail(confirmationCode);
+            return result.IsSuccess // Change urls
+                ? result.Data
+                    ? Redirect("") // success
+                    : Redirect("") // expired
+                : Redirect(""); // invalid code url page
+        }
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public void Delete(int id)
