@@ -121,7 +121,7 @@
     <value>Deposit service</value>
   </data>
   <data name="HtmlBody" xml:space="preserve">
-    <value>"Your confirmation code blah blah .. {0}"</value>
+    <value>"Your confirmation code is {0}"</value>
   </data>
   <data name="Subject" xml:space="preserve">
     <value>"Confirmation code"</value>

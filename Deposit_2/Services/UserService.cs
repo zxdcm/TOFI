@@ -39,15 +39,15 @@ namespace Deposit_2.Services
             _userContext.SaveChanges();
         }
 
-        public Result<User> SignUp(UserViewModel signUpVm)
+        public async Task<Result<User>> SignUp(UserViewModel signUpVm)
         {
             var isEmailOccupied = GetUser(u => u.Email == signUpVm.Email) != null;
             if (isEmailOccupied)
-                return Result<User>.Fail(string.Format(ResultMessages.EmailOccupied));
+                return Result<User>.Fail(string.Format(ResultMessages.EmailOccupied, signUpVm.Email));
 
             var isUserNameOccupied = GetUser(u => u.Username == signUpVm.Username) != null;
             if (isUserNameOccupied)
-                return Result<User>.Fail(string.Format(ResultMessages.UserNameOccupied));
+                return Result<User>.Fail(string.Format(ResultMessages.UserNameOccupied, signUpVm.Username));
 
             var securedPassword = _securityService.SecureWithMd5(signUpVm.Password, signUpVm.Email);
             var userEntity = new User
@@ -61,6 +61,10 @@ namespace Deposit_2.Services
 
             _userContext.Users.Add(userEntity);
             _userContext.SaveChanges();
+
+            await SendEmailConfirmationMessage(
+                userEntity.UserId, userEntity.Email,
+                _config.SignUpConfirmationCodeLifetimeInMinutes);
 
             return Result<User>.Ok(userEntity);
         }
@@ -120,7 +124,7 @@ namespace Deposit_2.Services
             EditWithSecurityCheck(userId, password, newPassword);
 
         public Result<User> EditProfileConfig(int userId, string password, string profileConfig) =>
-            EditWithSecurityCheck(userId, password, profileConfig);
+            EditWithSecurityCheck(userId, password, null, profileConfig);
 
         public Result<User> EditFiltersConfig(int userId, string filtersConfig) =>
             EditWithoutSecurityCheck(userId, filtersConfig);
@@ -131,7 +135,7 @@ namespace Deposit_2.Services
             if (!result.IsSuccess)
                 return result;
 
-            await SendEmailConfirmationMessage(userId, email);
+            await SendEmailConfirmationMessage(userId, email, _config.EmailConfirmationCodeLifetimeInMinutes);
 
             return Result<User>.Ok(string.Empty);
         }
@@ -142,27 +146,27 @@ namespace Deposit_2.Services
             if (!result.IsSuccess)
                 return result;
 
-            await SendEmailConfirmationMessage(userId, email);
+            await SendEmailConfirmationMessage(userId, email, _config.EmailConfirmationCodeLifetimeInMinutes);
 
             return Result<User>.Ok(string.Empty);
         }
 
         public Result<bool> ConfirmEmail(string code)
         {
-            var payload = new { UserId = 0, Email = string.Empty, CreatedOn = DateTime.MinValue };
+            ConfirmationCodePayload payload;
             try
             {
-                payload = JsonConvert.DeserializeAnonymousType(_securityService.DecryptAes(code), payload);
+                payload = JsonConvert.DeserializeObject<ConfirmationCodePayload>(_securityService.DecryptAes(code));
             }
-            catch (Exception) // todo: replace
+            catch (JsonReaderException)
             {
                 return Result<bool>.Fail(string.Empty);
             }
 
             var user = GetUser(u => u.UserId == payload.UserId);
 
-            if (DateTime.UtcNow.AddMinutes(_config.ConfirmationCodeValidTimeInMinutes) < payload.CreatedOn
-                && user.Email != payload.Email)
+            var isNotExpired = payload.CreatedOn.AddMinutes(payload.CodeLifetimeInMinutes) < DateTime.UtcNow;
+            if (isNotExpired && user.Email != payload.Email)
             {
                 user.Email = payload.Email;
 
@@ -174,9 +178,14 @@ namespace Deposit_2.Services
             return Result<bool>.Ok(false);
         }
 
-        private async Task SendEmailConfirmationMessage(int userId, string email)
+        private async Task SendEmailConfirmationMessage(int userId, string email, int codeLifetimeInMinutes)
         {
-            var confirmationCodePayload = new { UserId = userId, Email = email, CreatedOn = DateTime.UtcNow };
+            var confirmationCodePayload = new ConfirmationCodePayload
+            {
+                UserId = userId,
+                Email = email,
+                CodeLifetimeInMinutes = codeLifetimeInMinutes
+            };
             var confirmationCode = _securityService.EncryptAes(JsonConvert.SerializeObject(confirmationCodePayload));
 
             await _emailSender.SendEmailAsync(email, EmailMessages.Subject,
@@ -204,9 +213,7 @@ namespace Deposit_2.Services
             return Result<User>.Ok(string.Empty);
         }
 
-        private Result<User> EditWithoutSecurityCheck(
-            int userId, string filtersConfig = null,
-            string email = null)
+        private Result<User> EditWithoutSecurityCheck(int userId, string filtersConfig = null)
         {
             var userResult = GetUser(userId);
             if (!userResult.IsSuccess)
@@ -239,7 +246,7 @@ namespace Deposit_2.Services
 
             var user = userResult.Data;
             if (user.Password != _securityService.SecureWithMd5(oldPassword, user.Email))
-                return Result<User>.Ok(string.Format(ResultMessages.InvalidPassword));
+                return Result<User>.Fail(string.Format(ResultMessages.InvalidPassword));
 
             return Result<User>.Ok(user);
         }

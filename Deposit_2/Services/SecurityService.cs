@@ -16,7 +16,7 @@ namespace Deposit_2.Services
         }
 
         public string SecureWithMd5(string message, string salt)
-            => Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(string.Join("", message, salt, _config.HashSalt))));
+            => Convert.ToBase64String(MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(string.Join("", message, salt, _config.Md5Salt))));
 
         public string EncryptAes(string clearText, string key = null)
         {
@@ -24,7 +24,7 @@ namespace Deposit_2.Services
             byte[] clearBytes = Encoding.Unicode.GetBytes(clearText);
             using (var encryptor = Aes.Create())
             {
-                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(key, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(key, Encoding.UTF8.GetBytes(_config.AesSalt));
                 encryptor.Key = pdb.GetBytes(32);
                 encryptor.IV = pdb.GetBytes(16);
                 using (MemoryStream ms = new MemoryStream())
@@ -47,7 +47,7 @@ namespace Deposit_2.Services
             byte[] cipherBytes = Convert.FromBase64String(cipherText);
             using (var encryptor = Aes.Create())
             {
-                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(key, new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 });
+                Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(key, Encoding.UTF8.GetBytes(_config.AesSalt));
                 encryptor.Key = pdb.GetBytes(32);
                 encryptor.IV = pdb.GetBytes(16);
                 using (MemoryStream ms = new MemoryStream())

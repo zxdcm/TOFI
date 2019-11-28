@@ -30,11 +30,8 @@ namespace Deposit_2.Services
 
             using (var client = new SmtpClient())
             {
-                client.Connect(_config.Email, _config.PortNumber, false);
-                client.Authenticate(
-                    _config.Email,
-                    _config.Password
-                );
+                client.Connect(_config.Host, _config.PortNumber, _config.UseSsl);
+                client.Authenticate(_config.Email, _config.Password);
                 await client.SendAsync(mimeMessage);
                 await client.DisconnectAsync(true);
             }
