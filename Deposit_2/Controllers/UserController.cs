@@ -1,4 +1,5 @@
-﻿using Deposit_2.UserService;
+﻿using Deposit_2.Services;
+using Deposit_2.Utils;
 using Deposit_2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,14 @@ namespace Deposit_2.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly ApplicationConfiguration _configuration;
+
+        public UserController(
+            IUserService userService,
+            ApplicationConfiguration configuration)
         {
             _userService = userService;
+            _configuration = configuration;
         }
 
         [HttpPost(Name = nameof(SignIn))]
