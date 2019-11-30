@@ -9,15 +9,15 @@ namespace Deposit_2.Services
 {
     public interface IUserService
     {
-        User GetUser(Expression<Func<User, bool>> predicate);
         void EditUser(User user);
-        Result<User> SignUp(UserViewModel signUpModel);
+        User GetUser(Expression<Func<User, bool>> predicate);
         Result<User> SignIn(string login, string password);
         Result<User> EditPassword(int userId, string password, string newPassword);
         Result<User> EditProfileConfig(int userId, string password, string profileConfig);
         Result<User> EditFiltersConfig(int userId, string filtersConfig);
+        Result<bool> ConfirmEmail(string confirmationCode);
+        Task<Result<User>> SignUp(UserViewModel signUpVm);
         Task<Result<User>> EditEmail(int userId, string password, string email);
         Task<Result<User>> EditEmail(int userId, string email);
-        Result<bool> ConfirmEmail(string confirmationCode);
     }
 }

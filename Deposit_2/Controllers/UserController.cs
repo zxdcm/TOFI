@@ -1,50 +1,47 @@
-﻿using Deposit_2.Services;
-using Deposit_2.Utils;
+﻿using System.Threading.Tasks;
+using Deposit_2.Services;
 using Deposit_2.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Deposit_2.Controllers
 {
-    [Route("api/user")]
+    [Route("api/[controller]/[action]/")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
-        private readonly ApplicationConfiguration _configuration;
 
-        public UserController(
-            IUserService userService,
-            ApplicationConfiguration configuration)
+        public UserController(IUserService userService)
         {
             _userService = userService;
-            _configuration = configuration;
         }
 
-        [HttpPost(Name = nameof(SignIn))]
-        public IActionResult SignIn([FromBody] UserViewModel signInVw) 
-            => Ok(_userService.SignIn(signInVw.Email, signInVw.Password));
+        [HttpPost]
+        public IActionResult SignIn(UserViewModel signInVw) 
+            => Ok(_userService.SignIn(signInVw.Login, signInVw.Password));
 
-        [HttpPost(Name = nameof(SignUp))]
-        public IActionResult SignUp([FromBody] UserViewModel signUpVm)
-            => Ok(_userService.SignUp(signUpVm));
+        [HttpPost]
+        public async Task<IActionResult> SignUp(UserViewModel signUpVm)
+            => Ok(await _userService.SignUp(signUpVm));
 
         // PUT: api/User/5
-        [HttpPut("{id}", Name = nameof(EditPassword))]
-        public IActionResult EditPassword(int id, [FromBody] string password, [FromBody] string newPassword)
-            => Ok(_userService.EditPassword(id, password, newPassword));
+        [HttpPut("{id}")]
+        public IActionResult EditPassword(int id, EditUserViewModel editUserVm)
+            => Ok(_userService.EditPassword(id, editUserVm.Password, editUserVm.NewPassword));
 
-        [HttpPut("{id}", Name = nameof(EditFilterConfig))]
-        public IActionResult EditFilterConfig(int id, [FromBody] string filterConfig)
-            => Ok(_userService.EditFiltersConfig(id, filterConfig));
+        [HttpPut("{id}")]
+        public IActionResult EditFilterConfig(int id, EditUserViewModel editUserVm)
+            => Ok(_userService.EditFiltersConfig(id, editUserVm.FiltersConfig));
 
-        [HttpPut("{id}", Name = nameof(EditProfileConfig))]
-        public IActionResult EditProfileConfig(int id, string password, [FromBody] string profileConfig)
-            => Ok(_userService.EditProfileConfig(id, password, profileConfig));
+        [HttpPut("{id}")]
+        public IActionResult EditProfileConfig(int id, EditUserViewModel editUserVm)
+            => Ok(_userService.EditProfileConfig(id, editUserVm.Password, editUserVm.ProfileConfig));
 
-        [HttpPut("{id}", Name = nameof(EditEmail))]
-        public IActionResult EditEmail(int id, string password, [FromBody] string email)
-            => Ok(_userService.EditEmail(id, password, email));
+        [HttpPut("{id}")]
+        public async Task<IActionResult> EditEmail(int id, EditUserViewModel editUserVm)
+            => Ok(await _userService.EditEmail(id, editUserVm.Password, editUserVm.Email));
 
+        [HttpPost]
         public IActionResult ConfirmEmail([FromQuery] string confirmationCode)
         {
             var result = _userService.ConfirmEmail(confirmationCode);
@@ -53,11 +50,6 @@ namespace Deposit_2.Controllers
                     ? Redirect("") // success
                     : Redirect("") // expired
                 : Redirect(""); // invalid code url page
-        }
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

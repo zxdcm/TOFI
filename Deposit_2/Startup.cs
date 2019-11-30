@@ -1,11 +1,17 @@
-﻿using Deposit_2.Services;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Deposit_2.Context;
+using Deposit_2.Services;
 using Deposit_2.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Deposit_2
 {
@@ -24,7 +30,30 @@ namespace Deposit_2
             services.AddTransient<IEmailSender, EmailService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<SecurityService>();
-            services.AddSingleton(Configuration.GetSection("").Get<ApplicationConfiguration>());
+
+            var config = new ApplicationConfiguration();
+            var configSections = new List<string>
+            {
+                "ApplicationConfiguration",
+                "SmtpConfiguration",
+                "SecurityConfiguration",
+                "ConnectionStrings"
+            };
+            configSections.ForEach(section => Configuration.Bind(section, config));
+
+            services.AddSingleton(config);
+
+
+            services.AddDbContext<UserContext>(options => options.UseSqlite(config.DefaultConnectionString));
+
+            services.AddCors(options => options.AddDefaultPolicy(policy => policy.AllowAnyOrigin()));
+            services.AddSwaggerGen();
+            services.ConfigureSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new Info { Title = "Deposit API", Version = "v1" });
+
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -34,14 +63,17 @@ namespace Deposit_2
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "Deposit API"));
             }
             else
             {
                 app.UseHsts();
             }
 
+            app.UseCors();
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

@@ -70,7 +70,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на &quot;Your confirmation code blah blah .. {0}&quot;.
+        ///   Ищет локализованную строку, похожую на &quot;Your confirmation code is {0}&quot;.
         /// </summary>
         public static string HtmlBody {
             get {
