@@ -184,7 +184,8 @@ namespace Deposit_2.Services
             {
                 UserId = userId,
                 Email = email,
-                CodeLifetimeInMinutes = codeLifetimeInMinutes
+                CodeLifetimeInMinutes = codeLifetimeInMinutes,
+                CreatedOn = DateTime.UtcNow,
             };
             var confirmationCode = _securityService.EncryptAes(JsonConvert.SerializeObject(confirmationCodePayload));
 
