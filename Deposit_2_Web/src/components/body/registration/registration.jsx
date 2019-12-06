@@ -24,7 +24,7 @@ export default class RegistrationComponent extends React.Component {
                         <label for='passwrod-repeat'><b>Repeat password:</b></label>
                         <input className='form-control ' type='password' placeholder='Enter password' id='password-repeat' required/>
                     </div>
-                    <button type='submit' className='btn btn-dark'>Registred</button>
+                    <button type='submit' className='btn btn-dark'>Register</button>
                 </form>
             </div>
         );
