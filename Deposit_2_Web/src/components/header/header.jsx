@@ -1,7 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { SignInUrl, SearchUrl } from '../../constants/link';
+import { SignInUrl, SearchUrl, AuthUrl } from '../../constants/link';
+
+import './header.css';
 
 export default props => {
     return (
@@ -23,7 +25,7 @@ export default props => {
                     </ul>
                     <ul className='navbar-nav'>
                         <li className='nav-item'>
-                            <Link className='nav-link'>SignIn</Link>
+                            <Link className='nav-link' to={'/' + AuthUrl}>SignIn</Link>
                         </li>
                         <li className='nav-item'>
                             <Link className='nav-link' to={'/' + SignInUrl}>SignUp</Link>
