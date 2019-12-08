@@ -17,11 +17,11 @@ namespace Deposit_2.Controllers
         }
 
         [HttpPost]
-        public IActionResult SignIn(UserViewModel signInVw) 
+        public IActionResult SignIn([FromForm] UserViewModel signInVw) 
             => Ok(_userService.SignIn(signInVw.Login, signInVw.Password));
 
         [HttpPost]
-        public async Task<IActionResult> SignUp(UserViewModel signUpVm)
+        public async Task<IActionResult> SignUp([FromForm] UserViewModel signUpVm)
             => Ok(await _userService.SignUp(signUpVm));
 
         // PUT: api/User/5
@@ -51,5 +51,6 @@ namespace Deposit_2.Controllers
                     : Redirect("") // expired
                 : Redirect(""); // invalid code url page
         }
+
     }
 }
