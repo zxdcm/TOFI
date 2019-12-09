@@ -56,32 +56,32 @@ export class SearchComponent extends React.Component {
   
                         <div className='form-group col-12 d-flex flex-wrap'>
                             <div className='col-4'>
-                                <div class="checkbox">
+                                <div className="checkbox">
                                     <label><input type="checkbox" value=""/>Пополнения</label>
                                 </div>
                             </div>
                             <div className='col-4'>
-                                <div class="checkbox">
+                                <div className="checkbox">
                                     <label><input type="checkbox" value=""/>Капитализация</label>
                                 </div>
                             </div>
                             <div className='col-4'>
-                                <div class="checkbox disabled">
+                                <div className="checkbox disabled">
                                     <label><input type="checkbox" value="" disabled/>Досрочное снятие</label>
                                 </div>
                             </div>
                             <div className='col-4'>
-                                <div class="checkbox">
+                                <div className="checkbox">
                                     <label><input type="checkbox" value=""/>Частичное снятие</label>
                                 </div>
                             </div>
                             <div className='col-4'>
-                                <div class="checkbox">
+                                <div className="checkbox">
                                     <label><input type="checkbox" value=""/>Пролонгация</label>
                                 </div>
                             </div>
                             <div className='col-4'>
-                                <div class="checkbox disabled">
+                                <div className="checkbox disabled">
                                     <label><input type="checkbox" value="" disabled/>Открытие онлайн</label>
                                 </div>
                             </div>

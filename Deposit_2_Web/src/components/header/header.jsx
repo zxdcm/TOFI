@@ -5,7 +5,7 @@ import { SignInUrl, SearchUrl, AuthUrl } from '../../constants/link';
 
 import './header.css';
 
-export default props => {
+export default props => { 
     return (
         <nav className='navbar navbar-expand-lg navbar-dark bg-dark pl-4 pr-4'>
             <div className='container-fluid'>
@@ -23,7 +23,9 @@ export default props => {
                             <Link className='nav-link' to={'/' + SearchUrl}>Search</Link>
                         </li>
                     </ul>
+                    {props.user == null ? (
                     <ul className='navbar-nav'>
+                        
                         <li className='nav-item'>
                             <Link className='nav-link' to={'/' + AuthUrl}>SignIn</Link>
                         </li>
@@ -31,6 +33,16 @@ export default props => {
                             <Link className='nav-link' to={'/' + SignInUrl}>SignUp</Link>
                         </li>
                     </ul>
+                    ) : (
+                    <ul className='navbar-nav'>
+                    <span className='navbar-text'>
+                        Hello {props.user.userName}
+                    </span>
+                        <li className='nav-item'>
+                            <Link className='nav-link' to={'/' + SignInUrl}>SignOut</Link>
+                        </li>
+                    </ul>)}
+                    
                 </div>
             </div>
         </nav>

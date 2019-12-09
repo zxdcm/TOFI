@@ -1,6 +1,8 @@
 import React from 'react';
 
-export default class AuthorizationComponent extends React.Component {
+import { SIGN_IN_URL } from '../../../constants/API';
+
+export default class AuthComponent extends React.Component {
     constructor(props){
         super(props);
     }
@@ -8,7 +10,7 @@ export default class AuthorizationComponent extends React.Component {
     render() {
         return (
             <div className='container'>
-                <form action="">
+                <form action={SIGN_IN_URL}>
                     <h1>Welcome back <b>DepoEasy</b></h1>
                     <div className='form-group'>
                         <label htmlFor='log-in-email'><b>Email</b></label>
