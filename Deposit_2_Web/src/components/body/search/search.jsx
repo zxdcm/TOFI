@@ -1,9 +1,26 @@
 import React from 'react'
+import axios from 'axios';
+
+import { EDIT_FILTER } from '../../../constants/API';
 
 export class SearchComponent extends React.Component {
     constructor(props){
         super(props);
     }
+
+    sendFilters(){
+        const filters = ['sumVk', 'currency', 'date', 'replenishment', 'banks']
+            .map(id => ({ key: id, val: document.getElementById(id).value}))
+            .reduce((res, elem) => {
+                    res[elem.key] = elem.val;
+                    return res;
+                }, {});
+        
+        axios.put(EDIT_FILTER + '/1', {FiltersConfig: JSON.stringify(filters)})
+            .then(res => alert('Ok'))
+            .catch(res => console.log(res));
+    }
+
 
     render() {
         return (
@@ -11,8 +28,8 @@ export class SearchComponent extends React.Component {
                 <form>
                     <div className='d-flex flex-wrap'>
                         <div className='form-group col-4'>
-                            <label htmlFor='sum-vk'>Сумма вклада</label>
-                            <input className='form-control' type='text' id='sum-vk'/>           
+                            <label htmlFor='sumVk'>Сумма вклада</label>
+                            <input className='form-control' type='text' id='sumVk'/>           
                         </div>
                         
                         <div className='form-group col-4'>
@@ -47,9 +64,9 @@ export class SearchComponent extends React.Component {
                         <div className='form-group col-6'>
                             <label htmlFor='banks'>Банки</label>
                             <select className='form-control' type='text' id='banks'>
-                                <option value="">Банк 1</option>
-                                <option value="">Банк 2</option>
-                                <option value="">Банк 3</option>
+                                <option>Банк 1</option>
+                                <option>Банк 2</option>
+                                <option>Банк 3</option>
                             </select>           
                         </div>
                         <label htmlFor='predicate'>Условия</label>
@@ -89,6 +106,7 @@ export class SearchComponent extends React.Component {
                     </div>
                     <button className='btn btn-outline-dark'>Search for Me</button>    
                 </form>
+                <button onClick={e => this.sendFilters()}>test</button>
             </div>
         );
     }

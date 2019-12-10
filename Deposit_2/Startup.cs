@@ -46,7 +46,10 @@ namespace Deposit_2
 
             services.AddDbContext<UserContext>(options => options.UseSqlite(config.DefaultConnectionString));
 
-            services.AddCors(options => options.AddDefaultPolicy(policy => policy.AllowAnyOrigin()));
+            services.AddCors(options => options.AddDefaultPolicy(policy => policy.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+            ));
             services.AddSwaggerGen();
             services.ConfigureSwaggerGen(options =>
             {

@@ -30,7 +30,7 @@ namespace Deposit_2.Controllers
             => Ok(_userService.EditPassword(id, editUserVm.Password, editUserVm.NewPassword));
 
         [HttpPut("{id}")]
-        public IActionResult EditFilterConfig(int id, EditUserViewModel editUserVm)
+        public IActionResult EditFilterConfig(int id, [FromBody]EditUserViewModel editUserVm)
             => Ok(_userService.EditFiltersConfig(id, editUserVm.FiltersConfig));
 
         [HttpPut("{id}")]
