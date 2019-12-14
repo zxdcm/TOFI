@@ -61,7 +61,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Deposit service.
+        ///   Ищет локализованную строку, похожую на Smart deposit.
         /// </summary>
         public static string FromMailBoxAddressName {
             get {
@@ -70,7 +70,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на &quot;Your confirmation code is {0}&quot;.
+        ///   Ищет локализованную строку, похожую на Ваш код подтверждения {0}&quot;.
         /// </summary>
         public static string HtmlBody {
             get {
@@ -79,7 +79,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на &quot;Confirmation code&quot;.
+        ///   Ищет локализованную строку, похожую на Код подтверждения.
         /// </summary>
         public static string Subject {
             get {

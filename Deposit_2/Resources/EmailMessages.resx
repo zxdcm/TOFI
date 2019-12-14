@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FromMailBoxAddressName" xml:space="preserve">
-    <value>Deposit service</value>
+    <value>Smart deposit</value>
   </data>
   <data name="HtmlBody" xml:space="preserve">
-    <value>"Your confirmation code is {0}"</value>
+    <value>Ваш код подтверждения {0}"</value>
   </data>
   <data name="Subject" xml:space="preserve">
-    <value>"Confirmation code"</value>
+    <value>Код подтверждения</value>
   </data>
   <data name="ToMailBoxAddressName" xml:space="preserve">
     <value />

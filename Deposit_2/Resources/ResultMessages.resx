@@ -118,27 +118,28 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AccountBlocked" xml:space="preserve">
-    <value>Your account has been blocked for security reasons for {0} minutes</value>
+    <value>Ваш аккаунт был заблокирован на {0} минут</value>
+    <comment> </comment>
   </data>
   <data name="EmailOccupied" xml:space="preserve">
-    <value>An account with the Email {0} already exist</value>
+    <value>Аккаунт с почтовым адресом {0} уже существует</value>
   </data>
   <data name="InvalidPassword" xml:space="preserve">
-    <value>Invalid password</value>
+    <value>Неверный пароль</value>
   </data>
   <data name="PasswordChanged" xml:space="preserve">
-    <value>Your password has been changed sucessfully</value>
+    <value>Ваш пароль был изменен успешно</value>
   </data>
   <data name="PasswordsDoNotMatch" xml:space="preserve">
-    <value>Password do not match with the stored one</value>
+    <value>Неверный пароль</value>
   </data>
   <data name="UserNameOccupied" xml:space="preserve">
-    <value>An account with the UserName {0} already exist</value>
+    <value>Аккаунт с именем {0} уже существует</value>
   </data>
   <data name="UserNotFound" xml:space="preserve">
-    <value>User with the following {0} {1} not found</value>
+    <value>Пользователь с указанным {0} {1} не найден</value>
   </data>
   <data name="UserWithLoginNotFound" xml:space="preserve">
-    <value>User with the following Login {0} not found</value>
+    <value>Пользователь с указанным логином {0} не найден</value>
   </data>
 </root>

@@ -61,7 +61,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Your account has been blocked for security reasons for {0} minutes.
+        ///   Ищет локализованную строку, похожую на Ваш аккаунт был заблокирован на {0} минут.
         /// </summary>
         public static string AccountBlocked {
             get {
@@ -70,7 +70,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на An account with the Email {0} already exist.
+        ///   Ищет локализованную строку, похожую на Аккаунт с почтовым адресом {0} уже существует.
         /// </summary>
         public static string EmailOccupied {
             get {
@@ -79,7 +79,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Invalid password.
+        ///   Ищет локализованную строку, похожую на Неверный пароль.
         /// </summary>
         public static string InvalidPassword {
             get {
@@ -88,7 +88,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Your password has been changed sucessfully.
+        ///   Ищет локализованную строку, похожую на Ваш пароль был изменен успешно.
         /// </summary>
         public static string PasswordChanged {
             get {
@@ -97,7 +97,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Password do not match with the stored one.
+        ///   Ищет локализованную строку, похожую на Неверный пароль.
         /// </summary>
         public static string PasswordsDoNotMatch {
             get {
@@ -106,7 +106,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на An account with the UserName {0} already exist.
+        ///   Ищет локализованную строку, похожую на Аккаунт с именем {0} уже существует.
         /// </summary>
         public static string UserNameOccupied {
             get {
@@ -115,7 +115,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на User with the following {0} {1} not found.
+        ///   Ищет локализованную строку, похожую на Пользователь с указанным {0} {1} не найден.
         /// </summary>
         public static string UserNotFound {
             get {
@@ -124,7 +124,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на User with the following Login {0} not found.
+        ///   Ищет локализованную строку, похожую на Пользователь с указанным логином {0} не найден.
         /// </summary>
         public static string UserWithLoginNotFound {
             get {
