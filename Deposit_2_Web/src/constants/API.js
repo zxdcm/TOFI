@@ -1,4 +1,4 @@
-export const HOST_URL = 'http://localhost:56819/';
+export const HOST_URL = 'http://localhost:54733/';
 export const HOST_API_URL = HOST_URL + 'api/'
 
 export const SIGN_IN_URL = HOST_API_URL + 'User/SignIn';

@@ -6,10 +6,12 @@ import { SignInUrl, SearchUrl, AuthUrl } from '../../constants/link';
 import './header.css';
 
 export default props => { 
+
+
     return (
         <nav className='navbar navbar-expand-lg navbar-dark bg-dark pl-4 pr-4'>
             <div className='container-fluid'>
-                <a className='navbar-brand' href='#'>DepoEasy</a>
+                <a className='navbar-brand' href='#'>Smart Deposit</a>
                 <button className='navbar-toggler' type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation'>
                     <span className='navbar-toggler-icon'></span>
                 </button>
@@ -36,10 +38,13 @@ export default props => {
                     ) : (
                     <ul className='navbar-nav'>
                     <span className='navbar-text'>
-                        Hello {props.user.userName}
+                        Hello {props.user.username}
                     </span>
                         <li className='nav-item'>
-                            <Link className='nav-link' to={'/' + SignInUrl}>SignOut</Link>
+                            <button className='btn' onClick={e => {
+                                localStorage.clear();
+                                props.signOut()
+                            }}>SignOut</button>
                         </li>
                     </ul>)}
                     
