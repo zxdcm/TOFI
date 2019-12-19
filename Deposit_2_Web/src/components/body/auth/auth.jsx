@@ -16,7 +16,7 @@ const signIn = setCurrentUser => {
             if (response.data.isSuccess){             
                 localStorage.setItem('username', response.data.data.username);
                 localStorage.setItem('userId', response.data.data.userId);
-                window.location.reload();
+                window.location.href = "http://localhost:3000";
             } else {
                 alert(response.data.error);
             }

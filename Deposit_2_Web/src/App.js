@@ -17,9 +17,8 @@ export default () => {
       <Provider store={store}>
         <BrowserRouter>
           <Header/>
-          <Route exact path='/' component={HomeComeponent} />
           <Route exact path={'/' + SignInUrl} component={RegistrationComponent} />
-          <Route exact path={'/' + SearchUrl} component={SearchComponent} />
+          <Route exact path={'/' } component={SearchComponent} />
           <Route exact path={'/' + AuthUrl} component={AuthorizationComponent} />
           <Route exact path={'/' + SettingUrl} component={SettingComponent} />
         </BrowserRouter>

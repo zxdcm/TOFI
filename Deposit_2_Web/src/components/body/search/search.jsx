@@ -15,38 +15,67 @@ export class SearchComponent extends React.Component {
         }
     }
 
-    getDeposits() {
-       
-    }
-
     sendFilters(){
-        const filters = ['sumVk', 'currency', 'date', 'replenishment', 'banks']
-            .map(id => ({ key: id, val: document.getElementById(id).value}))
-            .reduce((res, elem) => {
-                    res[elem.key] = elem.val;
-                    return res;
-                }, {});
+        const filters = ['timing', 'percent', 'banks']
+                .map(id => ({ key: id, val: document.getElementById(id).value}))
 
-        axios.put(EDIT_FILTER + '/' + localStorage.getItem('userId'), {FiltersConfig: JSON.stringify(filters)})
-            .then(res => alert('Ok'))
-            .catch(res => console.log(res));
+        if (localStorage.getItem('username') && localStorage.getItem('userId')){
+            const result = filters.reduce((res, elem) => {
+                        res[elem.key] = elem.val;
+                        return res;
+                    }, {});
+                    
+            axios.put(EDIT_FILTER + '/' + localStorage.getItem('userId'), {FiltersConfig: JSON.stringify(result)})
+                .then(res => alert('Ok'))
+                .catch(res => console.log(res));
+        }
+
+        let url = 'https://smartdeposit.herokuapp.com/api/deposit/?';
+        const timing = document.getElementById('timing').value;
+        const percent = document.getElementById('percent').value;
+        //const currency = document.getElementById('currency').value;
+        const bank = document.getElementById('banks').value;
+
+        let isAdded = false
+        if(timing){
+            url += 'min_term=' + timing
+            isAdded = true;
+        }
+
+        if (percent){
+            if (isAdded) {
+                url += '&';
+            }
+            url += "percentage=" + percent;
+        }
+        if (bank) {
+            if (isAdded){
+                url += '&';
+            }
+
+            url += "banks[]=" + bank;   
+        }
+
+        axios.get(url)
+            .then(responce => this.setState({deposits: responce.data.results}))
+            .catch(err => alert('Some error'));
     }
 
 
     render() {
         const banks = this.state.banks.map(bankInfo => 
-            <option key={bankInfo.id} value={bankInfo.id}>{bankInfo.name}</option>);
+            <option id={'cot' + bankInfo.id} key={bankInfo.id} value={bankInfo.id}>{bankInfo.name}</option>);
 
-        const currency = this.state.currency.map((cur, key) => 
-            <option key={key} value={key}>{cur}</option>);   
+        // const currency = this.state.currency.map((cur, key) => 
+        //     <option key={key} value={cur}>{cur}</option>);   
 
-        const categories = this.state.categories.map(category => (
-            <div className='col-6' key={category.id}>
-                <div className="checkbox">
-                    <label><input type="checkbox" value={category.id} id={category.name}/>{category.name}</label>
-                </div>
-             </div>
-        ));
+        // const categories = this.state.categories.map(category => (
+        //     <div className='col-6' key={category.id}>
+        //         <div className="checkbox">
+        //             <label><input type="checkbox" value={category.id} id={category.name}/>{category.name}</label>
+        //         </div>
+        //      </div>
+        // ));
         
         const isAuth = localStorage.getItem('username') && localStorage.getItem('userId');
 
@@ -87,19 +116,19 @@ export class SearchComponent extends React.Component {
             <div className='container mt-4'>
                 <div className='d-flex flex-wrap'>
                     <div className='form-group col-6'>
-                        <label htmlFor='sumVk'><b>Сумма вклада</b></label>
-                        <input className='form-control' type='text' id='sumVk'/>           
+                        <label htmlFor='timing'><b>Минимальный срок</b></label>
+                        <input className='form-control' type='number' id='timing'/>           
                     </div>
                     
-                    <div className='form-group col-6'>
+                    {/* <div className='form-group col-6'>
                         <label htmlFor='currency'><b>Валюта</b></label>
-                        <select className='form-control' type='text' id='currency'>
+                        <select className='form-control' id='currency'>
                             {currency} 
                         </select>           
-                    </div>
+                    </div> */}
                     <div className='form-group col-6'>
-                        <label htmlFor='replenishment'><b>Пополнения</b></label>
-                        <input className='form-control' type='text' id='replenishment'/>           
+                        <label htmlFor='percent'><b>Процент</b></label>
+                        <input className='form-control' type='number' id='percent'/>           
                     </div>
                     
                     <div className='form-group col-6'>
@@ -108,17 +137,14 @@ export class SearchComponent extends React.Component {
                             {banks}
                         </select>           
                     </div>
-                    <div className='form-group col-12 d-flex flex-wrap'>
+                    {/* <div className='form-group col-12 d-flex flex-wrap'>
                         <label htmlFor='predicate' className='col-12'><b>Категории</b></label>
                         {categories}
-                    </div>
+                    </div> */}
                     <div className='form-group col-12 d-flex flex-wrap'>
-                        
                         <button className='btn btn-dark col-2' onClick={() => this.sendFilters()}>Искать!</button>   
-                        }
                     </div>
                 </div>
-                
                 <div className='container'>
                     {deposits}
                 </div> 
