@@ -22,7 +22,7 @@ namespace Deposit_2.Services
         {
             if (opts == null) opts = new PasswordOptions()
             {
-                RequiredLength = 8,
+                RequiredLength = 14,
                 RequiredUniqueChars = 4,
                 RequireDigit = true,
                 RequireLowercase = true,
