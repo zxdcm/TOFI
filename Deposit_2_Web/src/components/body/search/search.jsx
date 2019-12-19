@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios';
 
 import { EDIT_FILTER } from '../../../constants/API';
-
+import './search.css'
 
 export class SearchComponent extends React.Component {
     constructor(props){
@@ -10,8 +10,13 @@ export class SearchComponent extends React.Component {
         this.state = {
             currency: ['BYN', 'USD', 'EUR', 'RUB'],
             banks: [],
-            categories: []
+            categories: [],
+            deposits: []
         }
+    }
+
+    getDeposits() {
+       
     }
 
     sendFilters(){
@@ -38,38 +43,33 @@ export class SearchComponent extends React.Component {
         const categories = this.state.categories.map(category => (
             <div className='col-6' key={category.id}>
                 <div className="checkbox">
-                    <label><input type="checkbox" value={category.id}/>{category.name}</label>
+                    <label><input type="checkbox" value={category.id} id={category.name}/>{category.name}</label>
                 </div>
              </div>
         ));
         
+        const deposits = this.state.deposits.map(depo => (
+            <div className="card col-5 m-4" id={depo.id}>
+                <div className="card-body">
+                    <h5 className="card-title">{depo.name}</h5>
+                    <p className="card-text">{depo.description}</p>
+                    <a href="#" className="btn btn-dark">Go somewhere</a>
+                </div>
+            </div>
+        ));
+
         return (
-            <div className='container'>
+            <div className='container mt-4'>
                 <div className='d-flex flex-wrap'>
-                    <div className='form-group col-4'>
+                    <div className='form-group col-6'>
                         <label htmlFor='sumVk'>Сумма вклада</label>
                         <input className='form-control' type='text' id='sumVk'/>           
                     </div>
                     
-                    <div className='form-group col-4'>
+                    <div className='form-group col-6'>
                         <label htmlFor='currency'>Валюта</label>
                         <select className='form-control' type='text' id='currency'>
                             {currency} 
-                        </select>           
-                    </div>
-                    
-                    <div className='form-group col-4'>
-                        <label htmlFor='date'>Срок</label>
-                        <select className='form-control' type='text' id='date'>
-                            <option>Любой срок</option>
-                            <option>До 1-го месяца</option>
-                            <option>1-3 месяца</option>
-                            <option>3-6 месяца</option>
-                            <option>6-9 месяца</option>
-                            <option>9-12 месяца</option>
-                            <option>1-2 года</option>
-                            <option>2-3 года</option>
-                            <option>От 3-х лет</option>
                         </select>           
                     </div>
                     <div className='form-group col-6'>
@@ -89,7 +89,10 @@ export class SearchComponent extends React.Component {
                         {categories}
                     </div>
                 </div>
-                <button className='btn btn-outline-dark' onClick={() => this.sendFilters()}>Search for Me</button>    
+                <button className='btn btn-outline-dark' onClick={() => this.sendFilters()}>Search for Me</button>   
+                <div className='d-flex flex-wrap'>
+                    {deposits}
+                </div> 
             </div>
         );
     }
@@ -102,5 +105,9 @@ export class SearchComponent extends React.Component {
         axios.get('https://smartdeposit.herokuapp.com/api/category/')
             .then(responce => this.setState({categories: responce.data.results}))
             .catch(error => alert("Some error"));
-    }
+        
+        axios.get('https://smartdeposit.herokuapp.com/api/deposit/')
+            .then(responce => this.setState({deposits: responce.data.results}))
+            .catch(err => alert('Some error'));
+        }
 }
