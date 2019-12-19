@@ -32,17 +32,17 @@ export default class AuthComponent extends React.Component {
 
     render() {
         return (
-            <div className='container'>
-                <h1>Welcome back <b>DepoEasy</b></h1>
+            <div className='container mt-4'>
+                <h1>С возвращением в <b>Smart Deposit</b></h1>
                 <div className='form-group'>
                     <label htmlFor='log-in-email'><b>Email</b></label>
-                    <input className='form-control' type='text' placeholder='Enter email' id='log-in-email' required/>
+                    <input className='form-control col-6' type='text' placeholder='Введите ваш email' id='log-in-email' required/>
                 </div>
                 <div className='form-group'>
-                    <label htmlFor='pass-in-email'><b>Password</b></label>
-                    <input className='form-control' type='text' placeholder='Enter password' id='pass-in-email' required/>
+                    <label htmlFor='pass-in-email'><b>Пароль</b></label>
+                    <input className='form-control col-6' type='text' placeholder='Введите ваш пароль' id='pass-in-email' required/>
                 </div>
-                <button className='btn btn-dark' onClick={event => signIn(this.props.setCurrentUser)}>Log in</button>
+                <button className='btn btn-dark' onClick={event => signIn(this.props.setCurrentUser)}>Войти</button>
             </div>
         );
     }

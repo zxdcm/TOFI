@@ -18,21 +18,25 @@ export default class UserInfo extends React.Component {
     render(){
         return (
             <div className='container'>
-                <h1>User info</h1>
+                <h1>Настройки пользователя</h1>
                 <div className="form-group">
-                    <label  htmlFor='login'><b>Old password</b></label>
-                    <input className='form-control' type='password' placeholder='Enter old password' id='old-password' required/>
+                    <label  htmlFor='login'><b>Пароль</b></label>
+                    <input className='form-control' type='password' placeholder='Введите пароль' id='old-password' required/>
                 </div>
                 <div className="form-group">
-                    <label  htmlFor='username'><b>New password</b></label>
-                    <input className='form-control' type='password' placeholder='Enter new password' id='new-password' required/>
+                    <label  htmlFor='username'><b>Новый пароль</b></label>
+                    <input className='form-control' type='password' placeholder='Введите новый пароль' id='new-password' required/>
                 </div>
-                <button className='btn btn-dark' onClick={() => updateValue(EDIT_PASSWORD, 'newPassword', 'new-password')}>Change password</button>
                 <div className="form-group">
-                    <label  htmlFor='login'><b>Email</b></label>
-                    <input className='form-control' type='text' placeholder='Enter email' id='new-email' required/>
+                    <button className='btn btn-dark col-2' onClick={() => updateValue(EDIT_PASSWORD, 'newPassword', 'new-password')}>Change password</button>
                 </div>
-                <button className='btn btn-dark' onClick={() => updateValue(EDIT_EMAIL, 'email', 'new-email')}>Change email</button>
+                <div className="form-group mt-4">
+                    <label  htmlFor='login'><b>Новый email</b></label>
+                    <input className='form-control' type='text' placeholder='Enter email' id='Введите новый email' required/>
+                </div>
+                <div className="form-group">
+                    <button className='btn btn-dark col-2' onClick={() => updateValue(EDIT_EMAIL, 'email', 'new-email')}>Change email</button>
+                </div>
             </div>
         );
     }

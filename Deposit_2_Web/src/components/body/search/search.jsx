@@ -35,10 +35,10 @@ export class SearchComponent extends React.Component {
 
     render() {
         const banks = this.state.banks.map(bankInfo => 
-            <option key={bankInfo.id}>{bankInfo.name}</option>);
+            <option key={bankInfo.id} value={bankInfo.id}>{bankInfo.name}</option>);
 
         const currency = this.state.currency.map((cur, key) => 
-            <option key={key}>{cur}</option>);   
+            <option key={key} value={key}>{cur}</option>);   
 
         const categories = this.state.categories.map(category => (
             <div className='col-6' key={category.id}>
@@ -48,49 +48,78 @@ export class SearchComponent extends React.Component {
              </div>
         ));
         
+        const isAuth = localStorage.getItem('username') && localStorage.getItem('userId');
+
         const deposits = this.state.deposits.map(depo => (
-            <div className="card col-5 m-4" id={depo.id}>
-                <div className="card-body">
-                    <h5 className="card-title">{depo.name}</h5>
-                    <p className="card-text">{depo.description}</p>
-                    <a href="#" className="btn btn-dark">Go somewhere</a>
-                </div>
-            </div>
-        ));
+                <div className='col-6 d-flex align-items-stretch cont'>
+                    <div className="card border-dark" id={depo.id}>
+                        <div className='card-header'>
+                            <h3><b>{ 'Предложение №' + depo.id }</b></h3>
+                        </div>
+                        <div className="card-body">
+                            <h5 className="card-title">{depo.name}</h5>
+                            <p className="card-text">{depo.description}</p>
+                        </div>
+                
+                        <div class="card-footer">
+                            { isAuth ? (
+                            <button className='btn btn-dark'>Добавить</button>
+                            ) : null}
+                        </div>
+                    </div>
+                </div>))
+                .reduce((res, cur, index) => { 
+                    if (index % 2 == 0) {
+                        res.push([cur])
+                    } else {
+                        res[res.length-1].push(cur)
+                    }
+                    return res;
+                }, [])
+                .map(item => (
+                    <div className='row mt-4 mb-4'>
+                        {item[0]}
+                        {item[1]}
+                    </div>
+                ));
 
         return (
             <div className='container mt-4'>
                 <div className='d-flex flex-wrap'>
                     <div className='form-group col-6'>
-                        <label htmlFor='sumVk'>Сумма вклада</label>
+                        <label htmlFor='sumVk'><b>Сумма вклада</b></label>
                         <input className='form-control' type='text' id='sumVk'/>           
                     </div>
                     
                     <div className='form-group col-6'>
-                        <label htmlFor='currency'>Валюта</label>
+                        <label htmlFor='currency'><b>Валюта</b></label>
                         <select className='form-control' type='text' id='currency'>
                             {currency} 
                         </select>           
                     </div>
                     <div className='form-group col-6'>
-                        <label htmlFor='replenishment'>Пополнения</label>
+                        <label htmlFor='replenishment'><b>Пополнения</b></label>
                         <input className='form-control' type='text' id='replenishment'/>           
                     </div>
                     
                     <div className='form-group col-6'>
-                        <label htmlFor='banks'>Банки</label>
+                        <label htmlFor='banks'><b>Банки</b></label>
                         <select className='form-control' type='text' id='banks'>
                             {banks}
                         </select>           
                     </div>
-                    <label htmlFor='predicate'>Условия</label>
-
                     <div className='form-group col-12 d-flex flex-wrap'>
+                        <label htmlFor='predicate' className='col-12'><b>Категории</b></label>
                         {categories}
                     </div>
+                    <div className='form-group col-12 d-flex flex-wrap'>
+                        
+                        <button className='btn btn-dark col-2' onClick={() => this.sendFilters()}>Искать!</button>   
+                        }
+                    </div>
                 </div>
-                <button className='btn btn-outline-dark' onClick={() => this.sendFilters()}>Search for Me</button>   
-                <div className='d-flex flex-wrap'>
+                
+                <div className='container'>
                     {deposits}
                 </div> 
             </div>

@@ -19,32 +19,32 @@ export default props => {
                 <div className='collapse navbar-collapse' id='navbarSupportedContent'>
                     <ul className='navbar-nav mr-auto'>
                         <li className='nav-item'>
-                            <Link className='nav-link' to={'/' + SearchUrl}>Home</Link>
+                            <Link className='nav-link' to={'/' + SearchUrl}>Главная</Link>
                         </li>
                     </ul>
                     {props.user == null ? (
                     <ul className='navbar-nav'>
                         
                         <li className='nav-item'>
-                            <Link className='nav-link' to={'/' + AuthUrl}>SignIn</Link>
+                            <Link className='nav-link' to={'/' + AuthUrl}>Вход</Link>
                         </li>
                         <li className='nav-item'>
-                            <Link className='nav-link' to={'/' + SignInUrl}>SignUp</Link>
+                            <Link className='nav-link' to={'/' + SignInUrl}>Регистрация</Link>
                         </li>
                     </ul>
                     ) : (
                     <ul className='navbar-nav'>
                         <span className='navbar-text'>
-                            Hello {props.user.username}
+                            Привет {props.user.username}!
                         </span>
                         <li className='nav-item'>
-                            <Link className='nav-link' to={'/' + SettingUrl}>Settings</Link>
+                            <Link className='nav-link' to={'/' + SettingUrl}>Настройки</Link>
                         </li>
                         <li className='nav-item'>
                             <a className='nav-link' onClick={e => {
                                 localStorage.clear();
                                 props.signOut()
-                            }}>SignOut</a>
+                            }}>Выход</a>
                         </li>
                     </ul>)}
                     
