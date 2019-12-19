@@ -9,6 +9,10 @@ namespace Deposit_2.Models
         public string Username { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
+        [JsonIgnore]
+        public string TempPassword { get; set; }
+        [JsonIgnore]
+        public DateTime TempPasswordValidTillDate { get; set; }
         public string Email { get; set; }
         public string FiltersConfig { get; set; }
         public string ProfileConfig { get; set; }
