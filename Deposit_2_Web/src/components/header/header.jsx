@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { SignInUrl, SearchUrl, AuthUrl } from '../../constants/link';
+import { SignInUrl, SearchUrl, AuthUrl, SettingUrl } from '../../constants/link';
 
 import './header.css';
 
@@ -19,10 +19,7 @@ export default props => {
                 <div className='collapse navbar-collapse' id='navbarSupportedContent'>
                     <ul className='navbar-nav mr-auto'>
                         <li className='nav-item'>
-                            <Link className='nav-link' to={'/'}>Home</Link>
-                        </li>
-                        <li className='nav-item'>
-                            <Link className='nav-link' to={'/' + SearchUrl}>Search</Link>
+                            <Link className='nav-link' to={'/' + SearchUrl}>Home</Link>
                         </li>
                     </ul>
                     {props.user == null ? (
@@ -37,14 +34,17 @@ export default props => {
                     </ul>
                     ) : (
                     <ul className='navbar-nav'>
-                    <span className='navbar-text'>
-                        Hello {props.user.username}
-                    </span>
+                        <span className='navbar-text'>
+                            Hello {props.user.username}
+                        </span>
                         <li className='nav-item'>
-                            <button className='btn' onClick={e => {
+                            <Link className='nav-link' to={'/' + SettingUrl}>Settings</Link>
+                        </li>
+                        <li className='nav-item'>
+                            <a className='nav-link' onClick={e => {
                                 localStorage.clear();
                                 props.signOut()
-                            }}>SignOut</button>
+                            }}>SignOut</a>
                         </li>
                     </ul>)}
                     

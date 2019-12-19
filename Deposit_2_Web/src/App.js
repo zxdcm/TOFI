@@ -6,7 +6,8 @@ import Header from './components/header/header-container.jsx';
 import RegistrationComponent from './components/body/reg/reg.jsx';
 import AuthorizationComponent from './components/body/auth/auth-container.jsx';
 import HomeComeponent from './components/body/home/home.jsx';
-import { SignInUrl, SearchUrl, AuthUrl } from './constants/link';
+import SettingComponent from './components/body/info/info.jsx';
+import { SignInUrl, SearchUrl, AuthUrl, SettingUrl } from './constants/link';
 import { SearchComponent } from './components/body/search/search.jsx';
 import { store } from './store/index'; 
 
@@ -20,6 +21,7 @@ export default () => {
           <Route exact path={'/' + SignInUrl} component={RegistrationComponent} />
           <Route exact path={'/' + SearchUrl} component={SearchComponent} />
           <Route exact path={'/' + AuthUrl} component={AuthorizationComponent} />
+          <Route exact path={'/' + SettingUrl} component={SettingComponent} />
         </BrowserRouter>
       </Provider>
     </div>
