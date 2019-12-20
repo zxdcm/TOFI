@@ -36,18 +36,31 @@ export default class RegistrationComponent extends React.Component {
     }
 };
 
+const emailIsValid = email => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+const passwordIsValid = password => /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/.test(password);
+
 const signUp = () => {
     const password = document.getElementById('password').value;
     const repeatPassword = document.getElementById('password-repeat').value;
 
     if (password !== repeatPassword){
-        alert('Password is not equals');
+        alert('Пароли не совпадают');
+        return;
+    }
+
+    if (!passwordIsValid(password)) {
+        alert('Пароль должен содержать хотя бы одну заглвную, строчную букву, цифру и должен быть не менее 6 символов')
         return;
     }
 
     const form = new FormData();
     ['login', 'username', 'email', 'password'].forEach(value => 
         form.set(value, document.getElementById(value).value));
+
+    if (!emailIsValid(form.get("email"))){
+        alert('Пожалуйста, введите email в виде abcd@efg.xyz')
+        return;
+    }
 
     axios.post(SIGN_UP_URL, form)
         .then(response => response.data.isSuccess 
