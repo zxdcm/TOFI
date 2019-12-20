@@ -19,5 +19,6 @@ namespace Deposit_2.Services
         Task<Result<User>> SignUp(UserViewModel signUpVm);
         Task<Result<User>> EditEmail(int userId, string password, string email);
         Task<Result<User>> EditEmail(int userId, string email);
+        Task<Result<User>> RestorePassword(string email);
     }
 }

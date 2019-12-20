@@ -119,7 +119,6 @@
   </resheader>
   <data name="AccountBlocked" xml:space="preserve">
     <value>Ваш аккаунт был заблокирован на {0} минут</value>
-    <comment> </comment>
   </data>
   <data name="EmailOccupied" xml:space="preserve">
     <value>Аккаунт с почтовым адресом {0} уже существует</value>
@@ -129,6 +128,9 @@
   </data>
   <data name="PasswordChanged" xml:space="preserve">
     <value>Ваш пароль был изменен успешно</value>
+  </data>
+  <data name="PasswordRestoreSuccess" xml:space="preserve">
+    <value>Временный пароль был отправлен на указанный Email</value>
   </data>
   <data name="PasswordsDoNotMatch" xml:space="preserve">
     <value>Неверный пароль</value>
