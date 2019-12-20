@@ -61,7 +61,7 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Smart deposit.
+        ///   Ищет локализованную строку, похожую на Smart Deposit.
         /// </summary>
         public static string FromMailBoxAddressName {
             get {
@@ -75,6 +75,24 @@ namespace Deposit_2.Resources {
         public static string HtmlBody {
             get {
                 return ResourceManager.GetString("HtmlBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ваш временный пароль (24 часа) : {0} .
+        /// </summary>
+        public static string PasswordResetBody {
+            get {
+                return ResourceManager.GetString("PasswordResetBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Smart Deposit - Восстановление доступа.
+        /// </summary>
+        public static string PasswordResetSubject {
+            get {
+                return ResourceManager.GetString("PasswordResetSubject", resourceCulture);
             }
         }
         

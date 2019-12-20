@@ -97,6 +97,15 @@ namespace Deposit_2.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Временный пароль был отправлен на указанный Email.
+        /// </summary>
+        public static string PasswordRestoreSuccess {
+            get {
+                return ResourceManager.GetString("PasswordRestoreSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Неверный пароль.
         /// </summary>
         public static string PasswordsDoNotMatch {

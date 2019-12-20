@@ -78,7 +78,7 @@ namespace Deposit_2.Services
 
             var now = DateTime.UtcNow;
             Result<User> result;
-
+          
             var isAccountBlocked = userEntity.BlockExpires > now;
             var accountedBlockedResult = Result<User>.Fail(string.Format(ResultMessages.AccountBlocked, _config.BlockTimeInMinutes));
 
@@ -87,7 +87,9 @@ namespace Deposit_2.Services
                 return accountedBlockedResult;
             }
 
-            if (userEntity.Password == _securityService.SecureWithMd5(password, userEntity.Email))
+            var enteredPassword = _securityService.SecureWithMd5(password, userEntity.Email);
+            if (userEntity.Password == enteredPassword
+                || (IsTempPasswordValid(userEntity) && userEntity.TempPassword == enteredPassword))
             {
                 userEntity.FailedAuthRetryCount = 0;
                 result = Result<User>.Ok(new User
@@ -151,6 +153,31 @@ namespace Deposit_2.Services
             return Result<User>.Ok(string.Empty);
         }
 
+        public async Task<Result<User>> RestorePassword(string email)
+        {
+            var user = GetUser(i => i.Email == email);
+            if (user == null)
+                return Result<User>.Fail(string.Format(ResultMessages.UserNotFound, nameof(User.Email), email));
+
+            var newPassword = SecurityService.GenerateRandomPassword();
+
+            try
+            {
+                user.TempPassword = _securityService.SecureWithMd5(newPassword, user.Email);
+                user.TempPasswordValidTillDate = DateTime.UtcNow.AddDays(1);
+
+                await _emailSender.SendEmailAsync(email, EmailMessages.PasswordResetSubject,
+                    string.Format(EmailMessages.PasswordResetBody, newPassword));
+
+                _userContext.SaveChanges();
+            }
+            catch 
+            {
+
+            }
+            return Result<User>.Ok(ResultMessages.PasswordRestoreSuccess);
+        }
+
         public Result<bool> ConfirmEmail(string code)
         {
             ConfirmationCodePayload payload;
@@ -204,7 +231,11 @@ namespace Deposit_2.Services
             var user = userResult.Data;
 
             if (!string.IsNullOrWhiteSpace(newPassword))
+            {
                 user.Password = _securityService.SecureWithMd5(newPassword, user.Email);
+                user.TempPassword = null;
+                user.TempPasswordValidTillDate = DateTime.MinValue;
+            }
 
             if (!string.IsNullOrWhiteSpace(profileConfig))
                 user.ProfileConfig = profileConfig;
@@ -239,6 +270,10 @@ namespace Deposit_2.Services
             return Result<User>.Ok(user);
         }
 
+        private bool IsTempPasswordValid (User user) 
+            => !string.IsNullOrWhiteSpace(user.TempPassword)
+               && user.TempPasswordValidTillDate > DateTime.UtcNow;
+
         private Result<User> GetUserWithSecurityCheck(int userId, string oldPassword)
         {
             var userResult = GetUser(userId);
@@ -246,7 +281,8 @@ namespace Deposit_2.Services
                 return userResult;
 
             var user = userResult.Data;
-            if (user.Password != _securityService.SecureWithMd5(oldPassword, user.Email))
+            var enteredPassword = _securityService.SecureWithMd5(oldPassword, user.Email);
+            if (user.Password != enteredPassword || (IsTempPasswordValid(user) && user.TempPassword != enteredPassword))
                 return Result<User>.Fail(string.Format(ResultMessages.InvalidPassword));
 
             return Result<User>.Ok(user);
