@@ -37,7 +37,7 @@ export default class RegistrationComponent extends React.Component {
 };
 
 const emailIsValid = email => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-const passwordIsValid = password => /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/.test(password);
+const passwordIsValid = password => /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/.test(password);
 
 const signUp = () => {
     const password = document.getElementById('password').value;
