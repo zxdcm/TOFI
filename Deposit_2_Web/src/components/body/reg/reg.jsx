@@ -49,7 +49,7 @@ const signUp = () => {
     }
 
     if (!passwordIsValid(password)) {
-        alert('Пароль должен содержать хотя бы одну заглвную, строчную букву, цифру и должен быть не менее 6 символов')
+        alert('Пароль должен содержать хотя бы одну заглавную, одну строчную букву, цифру и должен быть не менее 6 символов')
         return;
     }
 
@@ -58,7 +58,7 @@ const signUp = () => {
         form.set(value, document.getElementById(value).value));
 
     if (!emailIsValid(form.get("email"))){
-        alert('Пожалуйста, введите email в виде abcd@efg.xyz')
+        alert('Пожалуйста, введите email в виде xxx@xxx.xxx')
         return;
     }
 

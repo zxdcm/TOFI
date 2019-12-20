@@ -42,8 +42,8 @@ namespace Deposit_2.Controllers
             => Ok(await _userService.EditEmail(id, editUserVm.Password, editUserVm.Email));
 
         [HttpPut]
-        public async Task<IActionResult> RestorePassword(string email) => 
-            Ok(await _userService.RestorePassword(email));
+        public async Task<IActionResult> RestorePassword(RestorePasswordVm restorePasswordVm) => 
+            Ok(await _userService.RestorePassword(restorePasswordVm.Email));
 
         [HttpPost]
         public IActionResult ConfirmEmail([FromQuery] string confirmationCode)
