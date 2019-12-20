@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Deposit_2.Migrations
 {
-    public partial class Init : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,8 +15,13 @@ namespace Deposit_2.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Username = table.Column<string>(nullable: true),
                     Password = table.Column<string>(nullable: true),
+                    TempPassword = table.Column<string>(nullable: true),
+                    TempPasswordValidTillDate = table.Column<DateTime>(nullable: false),
                     Email = table.Column<string>(nullable: true),
-                    FiltersConfig = table.Column<string>(nullable: true)
+                    FiltersConfig = table.Column<string>(nullable: true),
+                    ProfileConfig = table.Column<string>(nullable: true),
+                    BlockExpires = table.Column<DateTime>(nullable: false),
+                    FailedAuthRetryCount = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {

@@ -79,6 +79,14 @@ namespace Deposit_2
             app.UseCors(opt => opt.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
             app.UseHttpsRedirection();
             app.UseMvcWithDefaultRoute();
+
+            using (var scope = app.ApplicationServices.CreateScope())
+            {
+                using (var contex = scope.ServiceProvider.GetService<UserContext>())
+                {
+                    contex.Database.Migrate();
+                }
+            }
         }
     }
 }

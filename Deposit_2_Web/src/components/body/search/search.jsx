@@ -8,7 +8,7 @@ export class SearchComponent extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            currency: ['BYN', 'USD', 'EUR', 'RUB'],
+            currency: ['-', 'BYN', 'USD', 'EUR', 'RUB'],
             banks: [],
             categories: [],
             deposits: []
@@ -33,7 +33,7 @@ export class SearchComponent extends React.Component {
         let url = 'https://smartdeposit.herokuapp.com/api/deposit/?';
         const timing = document.getElementById('timing').value;
         const percent = document.getElementById('percent').value;
-        //const currency = document.getElementById('currency').value;
+        const currency = document.getElementById('currency').value;
         const bank = document.getElementById('banks').value;
 
         let isAdded = false
@@ -46,14 +46,22 @@ export class SearchComponent extends React.Component {
             if (isAdded) {
                 url += '&';
             }
+            isAdded = true;
             url += "percentage=" + percent;
         }
-        if (bank) {
+        if (bank && bank!=-1) {
             if (isAdded){
                 url += '&';
             }
-
+            isAdded = true;
             url += "banks[]=" + bank;   
+        }
+        if (currency && currency != '-'){
+            if (isAdded){
+                url += '&';
+            }
+            isAdded = true;
+            url += 'currency[]=' + currency           
         }
 
         axios.get(url)
@@ -66,8 +74,8 @@ export class SearchComponent extends React.Component {
         const banks = this.state.banks.map(bankInfo => 
             <option id={'cot' + bankInfo.id} key={bankInfo.id} value={bankInfo.id}>{bankInfo.name}</option>);
 
-        // const currency = this.state.currency.map((cur, key) => 
-        //     <option key={key} value={cur}>{cur}</option>);   
+        const currency = this.state.currency.map((cur, key) => 
+              <option key={key} value={cur}>{cur}</option>);   
 
         // const categories = this.state.categories.map(category => (
         //     <div className='col-6' key={category.id}>
@@ -120,12 +128,12 @@ export class SearchComponent extends React.Component {
                         <input className='form-control' type='number' id='timing'/>           
                     </div>
                     
-                    {/* <div className='form-group col-6'>
+                    <div className='form-group col-6'>
                         <label htmlFor='currency'><b>Валюта</b></label>
                         <select className='form-control' id='currency'>
                             {currency} 
                         </select>           
-                    </div> */}
+                    </div>
                     <div className='form-group col-6'>
                         <label htmlFor='percent'><b>Процент</b></label>
                         <input className='form-control' type='number' id='percent'/>           
@@ -154,7 +162,7 @@ export class SearchComponent extends React.Component {
 
     componentDidMount(){
         axios.get('https://smartdeposit.herokuapp.com/api/bank/')
-            .then(responce => this.setState({banks: responce.data.results}))
+            .then(responce => this.setState({banks: [{id: -1, name: '-'}].concat(responce.data.results)}))
             .catch(error => alert("Some error"));
 
         axios.get('https://smartdeposit.herokuapp.com/api/category/')

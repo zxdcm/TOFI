@@ -161,20 +161,14 @@ namespace Deposit_2.Services
 
             var newPassword = SecurityService.GenerateRandomPassword();
 
-            try
-            {
-                user.TempPassword = _securityService.SecureWithMd5(newPassword, user.Email);
-                user.TempPasswordValidTillDate = DateTime.UtcNow.AddDays(1);
+            user.TempPassword = _securityService.SecureWithMd5(newPassword, user.Email);
+            user.TempPasswordValidTillDate = DateTime.UtcNow.AddDays(1);
 
-                await _emailSender.SendEmailAsync(email, EmailMessages.PasswordResetSubject,
-                    string.Format(EmailMessages.PasswordResetBody, newPassword));
+            await _emailSender.SendEmailAsync(email, EmailMessages.PasswordResetSubject,
+                string.Format(EmailMessages.PasswordResetBody, newPassword));
 
-                _userContext.SaveChanges();
-            }
-            catch 
-            {
+            _userContext.SaveChanges();
 
-            }
             return Result<User>.Ok(ResultMessages.PasswordRestoreSuccess);
         }
 
